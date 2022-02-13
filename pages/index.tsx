@@ -1,9 +1,7 @@
 import { useDeno } from "aleph/react";
 import React from "react";
-import Logo from "~/components/logo.tsx";
-import Board from "~/components/board.tsx";
-import Candidates from "~/components/candidates.tsx";
 import useCounter from "~/lib/useCounter.ts";
+import Solver from "~/components/solver.tsx";
 
 export default function Home() {
   const [count, isSyncing, increase, decrease] = useCounter();
@@ -15,8 +13,7 @@ export default function Home() {
         <title>Hello World - Aleph.js</title>
         <link rel="stylesheet" href="../style/index.css" />
       </head>
-      <Board />
-      <Candidates words={["HELLO", "WORLD"]} />
+      <Solver />
     </div>
   );
 }

@@ -179,6 +179,7 @@ body {
   height: 100%;
   color: var(--color-white);
   text-align: center;
+  text-transform: uppercase;
 }
 
 .tile[data-state="correct"] {
