@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import Board from "~/components/board.tsx";
 import Candidates from "~/components/candidates.tsx";
+import { DictionaryWords } from "~/components/dictionary_words.tsx";
 
 export type Alphabet =
   | "A"
@@ -84,13 +85,48 @@ export type UpdateSolverStateProps = {
   index?: number;
 };
 
-function createRegExpFromSolverState(state: SolverState) {
-  let i = 0;
-  let alphabetSet: Set<Alphabet>;
-  if (state.chars_included[i].size > 0) {
-    alphabetSet = state.chars_included[i];
-  } else {
+function differenceSet<T>(setA: Set<T>, setB: Set<T>): Set<T> {
+  return new Set<T>(
+    [...setA].filter((e) => (!setB.has(e))),
+  );
+}
+
+function createRegExpFromSolverState(
+  state: SolverState,
+): (word: string) => boolean {
+  const whole_excluded = differenceSet(AllAlphabets, state.chars_excluded_all);
+
+  let regexpString = "^";
+  for (let i = 0; i < 5; i++) {
+    let alphabetSet: Set<Alphabet>;
+    if (state.chars_included[i].size > 0) {
+      alphabetSet = state.chars_included[i];
+    } else {
+      alphabetSet = differenceSet(whole_excluded, state.chars_excluded[i]);
+    }
+    regexpString += "[" + [...alphabetSet].join("") + "]";
   }
+  regexpString += "$";
+  const regexp = new RegExp(regexpString);
+
+  const filter = (word: string) => {
+    if (!word.match(regexp)) {
+      return false;
+    }
+    for (let char of state.chars_included_all) {
+      if (word.indexOf(char) < 0) {
+        return false;
+      }
+    }
+    return true;
+  };
+
+  return filter;
+}
+
+function searchWordsFromDictionary(state: SolverState): string[] {
+  const filter = createRegExpFromSolverState(state);
+  return [...DictionaryWords].filter(filter);
 }
 
 export default function Solver() {
@@ -128,7 +164,8 @@ export default function Solver() {
       }
     }
     console.log({ solverState: solverState });
-
+    const output = searchWordsFromDictionary(solverState);
+    console.log(output);
     setSolverState(solverState);
   };
   return (
