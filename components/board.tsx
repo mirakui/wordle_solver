@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Alphabet, UpdateSolverStateProps } from "~/components/solver.tsx";
 
 function stringToAlphabetSet(value: string) {
@@ -27,19 +27,26 @@ function RowChar(
   index: number,
   handler: (props: UpdateSolverStateProps) => void,
 ) {
+  const [enabledState, setEnabledState] = useState(true);
+  const onChangeInclude = (e: React.FormEvent<HTMLInputElement>) => {
+    setEnabledState(e.currentTarget.value.length == 0);
+    return onTextChangeFactory("include", handler, index)(e);
+  };
+
   return (
     <div className="row" data-row-type="char" data-row-index={index}>
       <div className="tile tile-no">{index + 1}</div>
       <div className="tile tile-include">
         <input
           type="text"
-          onChange={onTextChangeFactory("include", handler, index)}
+          onChange={onChangeInclude}
         />
       </div>
-      <div className="tile tile-exclude">
+      <div className="tile tile-exclude" data-enabled={enabledState}>
         <input
           type="text"
           onChange={onTextChangeFactory("exclude", handler, index)}
+          placeholder="excludes"
         />
       </div>
     </div>
@@ -54,7 +61,11 @@ function RowAny(handler: (props: UpdateSolverStateProps) => void) {
         <input type="text" onChange={onTextChangeFactory("include", handler)} />
       </div>
       <div className="tile tile-exclude">
-        <input type="text" onChange={onTextChangeFactory("exclude", handler)} />
+        <input
+          type="text"
+          onChange={onTextChangeFactory("exclude", handler)}
+          placeholder="excludes"
+        />
       </div>
     </div>
   );
@@ -69,8 +80,12 @@ export default function Board(
   }
   return (
     <div id="board">
-      {RowAny(handler)}
-      {rows}
+      <div className="row-any">
+        {RowAny(handler)}
+      </div>
+      <div className="rows">
+        {rows}
+      </div>
     </div>
   );
 }

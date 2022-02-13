@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import Board from "~/components/board.tsx";
 import Candidates from "~/components/candidates.tsx";
 import { DictionaryWords } from "~/components/dictionary_words.tsx";
@@ -126,7 +126,12 @@ function createRegExpFromSolverState(
 
 function searchWordsFromDictionary(state: SolverState): string[] {
   const filter = createRegExpFromSolverState(state);
-  return [...DictionaryWords].filter(filter);
+  const filteredWords = [...DictionaryWords].filter(filter);
+  if (filteredWords.length == DictionaryWords.length) {
+    return [];
+  } else {
+    return filteredWords;
+  }
 }
 
 export default function Solver() {
