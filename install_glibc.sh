@@ -1,4 +1,4 @@
-#!/usr/bin/bash +xe
+#!/usr/bin/bash -xe
 
 yum install -y wget
 wget -q -P /tmp/ https://ftp.gnu.org/gnu/glibc/glibc-2.18.tar.gz
