@@ -34,7 +34,12 @@ function RowChar(
   };
 
   return (
-    <div className="row" data-row-type="char" data-row-index={index}>
+    <div
+      className="row"
+      data-row-type="char"
+      data-row-index={index}
+      key={index}
+    >
       <div className="tile tile-no">{index + 1}</div>
       <div className="tile tile-include">
         <input

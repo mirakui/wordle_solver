@@ -1,7 +1,7 @@
 import React from "react";
 
 function Word({ word }: { word: string }) {
-  return <p className="word">{word}</p>;
+  return <p className="word" key={word}>{word}</p>;
 }
 
 export default function Candidates({ words }: { words: Array<string> }) {
