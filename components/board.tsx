@@ -1,8 +1,5 @@
-import React, { useRef } from "react";
-import Solver, {
-  Alphabet,
-  UpdateSolverStateProps,
-} from "~/components/solver.tsx";
+import React from "react";
+import { Alphabet, UpdateSolverStateProps } from "~/components/solver.tsx";
 
 function stringToAlphabetSet(value: string) {
   const chars = new Set<Alphabet>();
@@ -49,10 +46,10 @@ function RowChar(
   );
 }
 
-function RowAll(handler: (props: UpdateSolverStateProps) => void) {
+function RowAny(handler: (props: UpdateSolverStateProps) => void) {
   return (
-    <div className="row" data-row-type="all">
-      <div className="tile tile-no">ALL</div>
+    <div className="row" data-row-type="any">
+      <div className="tile tile-no">ANY</div>
       <div className="tile tile-include">
         <input type="text" onChange={onTextChangeFactory("include", handler)} />
       </div>
@@ -72,7 +69,7 @@ export default function Board(
   }
   return (
     <div id="board">
-      {RowAll(handler)}
+      {RowAny(handler)}
       {rows}
     </div>
   );

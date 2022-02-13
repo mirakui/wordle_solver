@@ -61,8 +61,8 @@ const AllAlphabets = new Set<Alphabet>([
 ]);
 
 type SolverState = {
-  chars_included_all: Set<Alphabet>;
-  chars_excluded_all: Set<Alphabet>;
+  chars_included_any: Set<Alphabet>;
+  chars_excluded_any: Set<Alphabet>;
   chars_included: [
     Set<Alphabet>,
     Set<Alphabet>,
@@ -94,7 +94,7 @@ function differenceSet<T>(setA: Set<T>, setB: Set<T>): Set<T> {
 function createRegExpFromSolverState(
   state: SolverState,
 ): (word: string) => boolean {
-  const whole_excluded = differenceSet(AllAlphabets, state.chars_excluded_all);
+  const whole_excluded = differenceSet(AllAlphabets, state.chars_excluded_any);
 
   let regexpString = "^";
   for (let i = 0; i < 5; i++) {
@@ -113,7 +113,7 @@ function createRegExpFromSolverState(
     if (!word.match(regexp)) {
       return false;
     }
-    for (let char of state.chars_included_all) {
+    for (let char of state.chars_included_any) {
       if (word.indexOf(char) < 0) {
         return false;
       }
@@ -131,8 +131,8 @@ function searchWordsFromDictionary(state: SolverState): string[] {
 
 export default function Solver() {
   let initialState: SolverState = {
-    chars_included_all: new Set<Alphabet>(),
-    chars_excluded_all: new Set<Alphabet>(),
+    chars_included_any: new Set<Alphabet>(),
+    chars_excluded_any: new Set<Alphabet>(),
     chars_included: [
       new Set<Alphabet>(),
       new Set<Alphabet>(),
@@ -159,17 +159,15 @@ export default function Solver() {
       }
     } else {
       if (props.type == "include") {
-        solverState.chars_included_all = props.chars;
+        solverState.chars_included_any = props.chars;
       } else {
-        solverState.chars_excluded_all = props.chars;
+        solverState.chars_excluded_any = props.chars;
       }
     }
-    console.log({ solverState: solverState });
     const candidateWords = searchWordsFromDictionary(solverState);
     setCandidatesState(candidateWords);
     setSolverState(solverState);
   };
-  const refWords = useRef([]);
   return (
     <>
       <Board handler={updateSolverState} />
