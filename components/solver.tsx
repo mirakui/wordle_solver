@@ -149,6 +149,7 @@ export default function Solver() {
     ],
   };
   const [solverState, setSolverState] = useState(initialState);
+  const [candidatesState, setCandidatesState] = useState(new Array<string>());
   const updateSolverState = (props: UpdateSolverStateProps) => {
     if (typeof (props.index) == "number") {
       if (props.type == "include") {
@@ -164,14 +165,15 @@ export default function Solver() {
       }
     }
     console.log({ solverState: solverState });
-    const output = searchWordsFromDictionary(solverState);
-    console.log(output);
+    const candidateWords = searchWordsFromDictionary(solverState);
+    setCandidatesState(candidateWords);
     setSolverState(solverState);
   };
+  const refWords = useRef([]);
   return (
     <>
       <Board handler={updateSolverState} />
-      <Candidates words={["HELLO", "WORLD"]} />
+      <Candidates words={candidatesState} />
     </>
   );
 }
