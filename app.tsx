@@ -7,6 +7,7 @@ export default function App(
     <>
       <head>
         <meta name="viewport" content="width=device-width" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
         <link rel="stylesheet" href="./style/app.css" />
       </head>
       <header>
